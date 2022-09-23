@@ -1,0 +1,23 @@
+myexe : fact.o fib.o rand.o main.o
+	gcc fact.o fib.o rand.o main.o -o myexe
+fact.o : fact.c
+	gcc -c -FPIC fact.c
+fib.o : fib.c
+	gcc -c -FPIC fib.c
+rand.o : rand.c
+	gcc -c -FPIC rand.c
+libmohamed.so: fact.o fib.o rand.o
+	gcc -shared -fPIC *.o -o libmohamed.so
+main.o : main.c libmohamed.so
+	gcc -c -I. main.c 
+
+clean:
+	rm -f *.o
+install: myexe
+	@cp myexe /usr/bin
+	@chmod a+x /usr/bin/myexe
+	@chmod og-w /usr/bin/myexe
+	@echo "myexe successfully installed in /usr/bin"
+uninstall:
+	@rm -f /usr/bin/myexe
+	@echo "myexe successfully un-installed in /usr/bin"
